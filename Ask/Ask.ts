@@ -1,25 +1,23 @@
-type BegKeys = "name" | "message";
-type BegConfig = Record<BegKeys, string>;
+type AskKeys = "name" | "message";
+type AskConfig = Record<AskKeys, string>;
 
 export class Ask {
-  async ask(params: BegConfig[]) {
+  async prompt(params: AskConfig[]) {
     const results = [];
     for (const param of params) {
-      results.push(await this.prompt(param));
+      results.push(await this.ask(param));
     }
 
-    console.log(results);
+    return results;
   }
 
-  async prompt({
+  private async ask({
     message,
     name,
-  }: BegConfig) {
-    await this.write(message);
+  }: AskConfig) {
+    await this.write(`${message}\n`);
 
     const answer = await this.read();
-
-    console.log(answer);
 
     return {
       [name]: answer,
