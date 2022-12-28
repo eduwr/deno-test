@@ -1,35 +1,18 @@
+import * as path from "https://deno.land/std@0.168.0/path/mod.ts";
 import { Ask } from "./Ask/Ask.ts";
+import { FileStorage } from "./FileStorage/FileStorage.ts";
 
 const ask = new Ask();
+const _path = path.resolve(".", "storage", "storage.json");
+const storage = new FileStorage(_path);
+
+await storage.init();
 
 const answers = await ask.prompt([{
-  message: "What do you want to do?",
-  name: "todo",
-}, {
-  message: "Do you wanna hang out?",
-  name: "hangOut",
+  message: "What's your current weight?",
+  name: "weight",
 }]);
 
-try {
-  const storage = await Deno.readTextFile("./storage/storage.json");
+const newDB = await storage.save(answers);
 
-  console.log("storageString", storage);
-
-  const storageDb = JSON.parse(storage);
-
-  console.log("StorageDB", storageDb);
-
-  answers.forEach((answer) => storageDb.push(answer));
-
-  await Deno.writeTextFile(
-    "./storage/storage.json",
-    JSON.stringify(storageDb),
-  );
-} catch (e) {
-  console.log("File not found!", e);
-
-  await Deno.writeTextFile(
-    "./storage/storage.json",
-    JSON.stringify(answers, null, 2),
-  );
-}
+console.log(newDB);

@@ -2,7 +2,7 @@ type AskKeys = "name" | "message";
 type AskConfig = Record<AskKeys, string>;
 
 export class Ask {
-  async prompt(params: AskConfig[]) {
+  async prompt<K extends (AskConfig)>(params: K[]) {
     const results = [];
     for (const param of params) {
       results.push(await this.ask(param));
